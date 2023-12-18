@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import Link from "next/link";
+// import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -21,7 +21,7 @@ export default function Home() {
         </div>
       </div>
 
-        <h1 className="text-6xl sm:text-8xl text-center">Design Patterns</h1>
+      <h1 className="text-6xl sm:text-8xl text-center">Design Patterns</h1>
 
       {/*<div className="min-h-full w-full bg-white dark:bg-gray-900">*/}
       {/*  <div className="container relative mx-auto flex min-h-[250px] flex-col px-6 py-8 ">*/}

@@ -1,7 +1,7 @@
 export enum Topic {
   Foo = 'foo',
   Bar = 'bar',
-  Foobar = 'foobar'
+  Foobar = 'foobar',
 }
 
 type FooPayload = string
@@ -16,6 +16,8 @@ type Subscriber = {
   func: EventCallback
 }
 
+export type PublishParams = {topic: Topic; args: EventPayload}
+
 class PubSub {
   topics: Record<string, Subscriber[]>
   subUid: number
@@ -25,7 +27,7 @@ class PubSub {
     this.subUid = -1
   }
 
-  publish(topic: Topic, args: EventPayload) {
+  publish({topic, args}: PublishParams) {
     if (!this.topics[topic]) {
       return false
     }
