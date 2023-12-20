@@ -1,3 +1,4 @@
+import {format} from 'date-fns'
 import {X} from 'lucide-react'
 import {Dispatch, SetStateAction, useState} from 'react'
 import {v4 as uuidv4} from 'uuid'
@@ -12,6 +13,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 export function SubscriberCard({
   subscriber,
@@ -20,16 +30,22 @@ export function SubscriberCard({
   subscriber: Subscriber
   setSubscribers: Dispatch<SetStateAction<Subscriber[]>>
 }) {
-  const [log, setLog] = useState<EventPayload[]>([])
+  const [log, setLog] = useState<
+    {topic: Topic; date: string; args: EventPayload}[]
+  >([])
   const topics = Object.values(Topic)
 
   function callback(topic: Topic, args: EventPayload) {
+    console.log(topic)
+    const date = new Date()
+    const item = {topic, date: format(date, 'HH:mm:ss'), args}
+
     setLog(prev => {
       if (prev.length === 5) {
-        return [args, ...prev.slice(0, 4)]
+        return [item, ...prev.slice(0, 4)]
       }
 
-      return [args, ...prev]
+      return [item, ...prev]
     })
   }
 
@@ -48,9 +64,27 @@ export function SubscriberCard({
         {topics.map(topic => (
           <TopicCheckbox key={topic} topic={topic} callback={callback} />
         ))}
-        {log.map(event => (
-          <div key={uuidv4()}>{event.toString()}</div>
-        ))}
+        {!!log.length && (
+          <Table>
+            <TableCaption>The last 5 events.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Time</TableHead>
+                <TableHead>Topic</TableHead>
+                <TableHead>Message</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {log.map(event => (
+                <TableRow key={uuidv4()}>
+                  <TableCell>{event.date}</TableCell>
+                  <TableCell className="capitalize">{event.topic}</TableCell>
+                  <TableCell>{event.args.toString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   )
