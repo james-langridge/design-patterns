@@ -24,7 +24,13 @@ export function SubscriberCard({
   const topics = Object.values(Topic)
 
   function callback(topic: Topic, args: EventPayload) {
-    setLog(prev => [...prev, args])
+    setLog(prev => {
+      if (prev.length === 5) {
+        return [args, ...prev.slice(0, 4)]
+      }
+
+      return [args, ...prev]
+    })
   }
 
   function onClick() {
